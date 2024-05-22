@@ -148,8 +148,8 @@ const (
 // Walking структура описывающая тренировку Ходьба
 type Walking struct {
 	// добавьте необходимые поля в структуру
-	...
-	... // рост пользователя
+	Training         // встраиваем структуру Training для использования её методов
+	Height   float64 // рост пользователя в сантиметрах
 }
 
 // Calories возвращает количество потраченных килокалорий при ходьбе.
@@ -159,14 +159,22 @@ type Walking struct {
 // Это переопределенный метод Calories() из Training.
 func (w Walking) Calories() float64 {
 	// вставьте ваш код ниже
-	...
+	weight := w.Weight
+	averageSpeed := w.meanSpeed()
+	trainingDuration := w.Duration
+	height := w.Height
+
+	calories := ((CaloriesWeightMultiplier*weight + (averageSpeed * averageSpeed / (height / 100) * CaloriesSpeedHeightMultiplier * weight)) *
+		trainingDuration.Hours() * MinInHours)
+
+	return calories
 }
 
 // TrainingInfo возвращает структуру InfoMessage с информацией о проведенной тренировке.
 // Это переопределенный метод TrainingInfo() из Training.
 func (w Walking) TrainingInfo() InfoMessage {
 	// вставьте ваш код ниже
-	...
+	return w.Training.TrainingInfo()
 }
 
 // Константы для расчета потраченных килокалорий при плавании.
