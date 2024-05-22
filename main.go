@@ -27,22 +27,23 @@ type Training struct {
 // Формула расчета:
 // количество_повторов * длина_шага / м_в_км
 func (t Training) distance() float64 {
-	// вставьте ваш код ниже
-	...
-}
-
-// meanSpeed возвращает среднюю скорость бега или ходьбы.
-func (t Training) meanSpeed() float64 {
-	// вставьте ваш код ниже
-	...	
-}
-
-// Calories возвращает количество потраченных килокалорий на тренировке.
-// Пока возвращаем 0, так как этот метод будет переопределяться для каждого типа тренировки.
-func (t Training) Calories() float64 {
-	// вставьте ваш код ниже
-	...
-}
+	func (t Training) distance() float64 {
+		// вставьте ваш код ниже
+		return float64(t.Action) * t.LenStep / 1000
+	}
+	
+	// meanSpeed возвращает среднюю скорость бега или ходьбы.
+	func (t Training) meanSpeed() float64 {
+		// вставьте ваш код ниже
+		return t.distance() / t.Duration.Hours()
+	}
+	
+	// Calories возвращает количество потраченных килокалорий на тренировке.
+	// Пока возвращаем 0, так как этот метод будет переопределяться для каждого типа тренировки.
+	func (t Training) Calories() float64 {
+		// вставьте ваш код ниже
+		return 0
+	}
 
 // InfoMessage содержит информацию о проведенной тренировке.
 type InfoMessage struct {
