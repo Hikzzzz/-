@@ -2,7 +2,6 @@ package main
 
 import (
 	"fmt"
-	"math"
 	"time"
 )
 
@@ -27,23 +26,22 @@ type Training struct {
 // Формула расчета:
 // количество_повторов * длина_шага / м_в_км
 func (t Training) distance() float64 {
-	func (t Training) distance() float64 {
-		// вставьте ваш код ниже
-		return float64(t.Action) * t.LenStep / 1000
-	}
-	
-	// meanSpeed возвращает среднюю скорость бега или ходьбы.
-	func (t Training) meanSpeed() float64 {
-		// вставьте ваш код ниже
-		return t.distance() / t.Duration.Hours()
-	}
-	
-	// Calories возвращает количество потраченных килокалорий на тренировке.
-	// Пока возвращаем 0, так как этот метод будет переопределяться для каждого типа тренировки.
-	func (t Training) Calories() float64 {
-		// вставьте ваш код ниже
-		return 0
-	}
+	// вставьте ваш код ниже
+	return float64(t.Action) * t.LenStep / 1000
+}
+
+// meanSpeed возвращает среднюю скорость бега или ходьбы.
+func (t Training) meanSpeed() float64 {
+	// вставьте ваш код ниже
+	return t.distance() / t.Duration.Hours()
+}
+
+// Calories возвращает количество потраченных килокалорий на тренировке.
+// Пока возвращаем 0, так как этот метод будет переопределяться для каждого типа тренировки.
+func (t Training) Calories() float64 {
+	// вставьте ваш код ниже
+	return 0
+}
 
 // InfoMessage содержит информацию о проведенной тренировке.
 type InfoMessage struct {
@@ -84,6 +82,7 @@ func (t Training) TrainingInfo() InfoMessage {
 	}
 
 	return info
+}
 
 // String возвращает строку с информацией о проведенной тренировке.
 func (i InfoMessage) String() string {
@@ -148,8 +147,8 @@ const (
 // Walking структура описывающая тренировку Ходьба
 type Walking struct {
 	// добавьте необходимые поля в структуру
-	Training         // встраиваем структуру Training для использования её методов
-	Height   float64 // рост пользователя в сантиметрах
+	Training
+	Height float64 // рост пользователя в сантиметрах
 }
 
 // Calories возвращает количество потраченных килокалорий при ходьбе.
@@ -187,9 +186,9 @@ const (
 // Swimming структура, описывающая тренировку Плавание
 type Swimming struct {
 	// добавьте необходимые поля в структуру
-	...
-	... // длина бассейна
-	... // количество пересечений бассейна
+	Training
+	LengthPool int // длина бассейна
+	CountPool  int // количество пересечений бассейна
 }
 
 // meanSpeed возвращает среднюю скорость при плавании.
@@ -198,7 +197,12 @@ type Swimming struct {
 // Это переопределенный метод Calories() из Training.
 func (s Swimming) meanSpeed() float64 {
 	// вставьте ваш код ниже
-	...
+	poolLength := float64(s.LengthPool)
+	countPool := float64(s.CountPool)
+	trainingDuration := s.Duration
+
+	meanSpeed := poolLength * countPool / MInKm / trainingDuration.Hours()
+	return meanSpeed
 }
 
 // Calories возвращает количество калорий, потраченных при плавании.
@@ -207,25 +211,37 @@ func (s Swimming) meanSpeed() float64 {
 // Это переопределенный метод Calories() из Training.
 func (s Swimming) Calories() float64 {
 	// вставьте ваш код ниже
-	...
+	averageSpeed := s.meanSpeed()
+	weight := s.Weight
+	trainingDuration := s.Duration
+
+	calories := (averageSpeed + SwimmingCaloriesMeanSpeedShift) * SwimmingCaloriesWeightMultiplier * weight * trainingDuration.Hours()
+
+	return calories
 }
 
 // TrainingInfo returns info about swimming training.
 // Это переопределенный метод TrainingInfo() из Training.
 func (s Swimming) TrainingInfo() InfoMessage {
 	// вставьте ваш код ниже
-	...
+	info := InfoMessage{
+		TrainingType: "Swimming",
+		Distance:     float64(s.LengthPool * s.CountPool),
+		Duration:     s.Duration,
+	}
+
+	return info
 }
 
 // ReadData возвращает информацию о проведенной тренировке.
 func ReadData(training CaloriesCalculator) string {
 	// получите количество затраченных калорий
-	calories := ...
+	calories := training.Calories()
 
 	// получите информацию о тренировке
-	info := ...
+	info := training.TrainingInfo()
 	// добавьте полученные калории в структуру с информацией о тренировке
-	...
+	info.Calories += calories
 
 	return fmt.Sprint(info)
 }
