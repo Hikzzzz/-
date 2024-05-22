@@ -112,7 +112,7 @@ const (
 // Running структура, описывающая тренировку Бег.
 type Running struct {
 	// добавьте необходимые поля в структуру
-	...
+	Training
 }
 
 // Calories возввращает количество потраченных килокалория при беге.
@@ -121,14 +121,21 @@ type Running struct {
 // Это переопределенный метод Calories() из Training.
 func (r Running) Calories() float64 {
 	// вставьте ваш код ниже
-	...
+	averageSpeed := r.meanSpeed()
+	trainingDuration := r.Duration
+	weight := r.Weight
+
+	calories := ((CaloriesMeanSpeedMultiplier*averageSpeed + CaloriesMeanSpeedShift) *
+		weight / MInKm * trainingDuration.Hours() * MinInHours)
+
+	return calories
 }
 
 // TrainingInfo возвращает структуру InfoMessage с информацией о проведенной тренировке.
 // Это переопределенный метод TrainingInfo() из Training.
 func (r Running) TrainingInfo() InfoMessage {
 	// вставьте ваш код ниже
-	...
+	return r.Training.TrainingInfo()
 }
 
 // Константы для расчета потраченных килокалорий при ходьбе.
