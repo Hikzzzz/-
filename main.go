@@ -59,8 +59,31 @@ type InfoMessage struct {
 // TrainingInfo возвращает труктуру InfoMessage, в которой хранится вся информация о проведенной тренировке.
 func (t Training) TrainingInfo() InfoMessage {
 	// вставьте ваш код ниже
-	...
-}
+	var activity string
+	switch t.TrainingType {
+	case "Running":
+		activity = "Running"
+	case "Walking":
+		activity = "Walking"
+	case "Swimming":
+		activity = "Swimming"
+	}
+
+	// Рассчитываем расстояние, среднюю скорость и калории
+	distance := t.distance()
+	meanSpeed := t.meanSpeed()
+	calories := t.Calories()
+
+	// Создаем структуру InfoMessage с информацией о тренировке
+	info := InfoMessage{
+		TrainingType: activity,
+		Duration:     t.Duration,
+		Distance:     distance,
+		Speed:        meanSpeed,
+		Calories:     calories,
+	}
+
+	return info
 
 // String возвращает строку с информацией о проведенной тренировке.
 func (i InfoMessage) String() string {
