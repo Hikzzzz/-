@@ -58,17 +58,14 @@ type InfoMessage struct {
 // TrainingInfo возвращает труктуру InfoMessage, в которой хранится вся информация о проведенной тренировке.
 func (t Training) TrainingInfo() InfoMessage {
 	// вставьте ваш код ниже
-	distance := t.distance()
-	meanSpeed := t.meanSpeed()
-	calories := t.Calories()
 
 	// Создаем структуру InfoMessage с информацией о тренировке
 	info := InfoMessage{
 		TrainingType: t.TrainingType,
 		Duration:     t.Duration,
-		Distance:     distance,
-		Speed:        meanSpeed,
-		Calories:     calories,
+		Distance:     t.distance(),
+		Speed:        t.meanSpeed(),
+		Calories:     t.Calories(),
 	}
 
 	return info
@@ -213,11 +210,17 @@ func (s Swimming) Calories() float64 {
 // TrainingInfo returns info about swimming training.
 // Это переопределенный метод TrainingInfo() из Training.
 func (s Swimming) TrainingInfo() InfoMessage {
-	// вставьте ваш код ниже
+	distance := float64(s.LengthPool * s.CountPool)
+	duration := s.Duration
+	// Расчет средней скорости для плавания
+
+	// Расчет калорий и других параметров, если необходимо
+
 	info := InfoMessage{
-		TrainingType: "Swimming",
-		Distance:     float64(s.LengthPool * s.CountPool),
-		Duration:     s.Duration,
+		TrainingType: s.TrainingType,
+		Distance:     distance,
+		Duration:     duration,
+		// Другие поля, если необходимо инициализировать
 	}
 
 	return info
